@@ -1,0 +1,64 @@
+service:
+  name: rate-my-food-backend
+
+plugin:
+  - serverless-webpack
+  - serverless-iam-roles-per-function
+  - serverless-reqvalidator-plugin
+  - serverless-aws-documentation
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+
+  stage: ${opt:stage, 'dev'}
+  region: ${opt:region, 'eu-central-1'}
+  apiGateway:
+    shouldStartNameWithService: true
+
+  environment:
+    FOOD_RATING_TABLE: Food-Rating-${self:provider.stage}
+    FOOD_INDEX_BY_USERID: FoodRatingByUserId
+    FOOD_IMAGES_S3_BUCKET: my-food-rating-images-${self:provider.stage}
+    SIGNED_URL_EXPIRATION: 300
+    AUTH_0_JWKS_URL: https://dev-lb67h78z.eu.auth0.com/.well-known/jwks.json
+
+  tracing:
+    lambda: true
+    apiGateway: true
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - xray:PutTraceSegments
+        - xray:PutTelemetryRecords
+      Resource: '*'
+
+custom:
+  documentation:
+    api:
+      info:
+        version: v0.0.1
+        title: Serverless food rating API
+        description: Serverless API for rating food
+
+functions:
+  Auth:
+    handler: src/lambda/auth/auth0Authorizer.handler
+
+  GetProductRatings:
+    handler: src/lambda/http/getFoodRatings.handler
+    events:
+      - http:
+          method: get
+          authorizer: Auth
+          path: ratings
+          cors: true
+    iamRoleStatementsInherit: true
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+        Resource:
+          - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.FOOD_RATING_TABLE}
+          - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.FOOD_RATING_TABLE}/index/${self:provider.environment.FOOD_INDEX_BY_USERID}
