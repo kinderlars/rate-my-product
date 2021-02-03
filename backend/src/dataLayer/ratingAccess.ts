@@ -13,16 +13,16 @@ export class RatingAccess {
 
   constructor(
       private readonly docClient: DocumentClient = new XAWS.DynamoDB.DocumentClient(),
-      private readonly productRatingTable: string = process.env.PRODUCT_RATING_TABLE,
-      private readonly productRatingIndexByUserId = process.env.PRODUCT_INDEX_BY_USERID
+      private readonly ratingTable: string = process.env.RATING_TABLE,
+      private readonly ratingIndexByUserId = process.env.RATING_INDEX_BY_USERID
   ){}
 
   async getAllProductRatings(userId:string): Promise<Rating[]> {
-    logger.info(`Starting DynamoDB query on table ${this.productRatingTable}`)
+    logger.info(`Starting DynamoDB query on table ${this.ratingTable}`)
 
     const result = await this.docClient.query({
-      TableName: this.productRatingTable,
-      IndexName: this.productRatingIndexByUserId,
+      TableName: this.ratingTable,
+      IndexName: this.ratingIndexByUserId,
       KeyConditionExpression: 'userId = :userId',
       ExpressionAttributeValues: {
         ':userId': userId
@@ -40,7 +40,7 @@ export class RatingAccess {
     logger.info(`Getting product rating ${ratingId} of user ${userId}`)
 
     const result = await this.docClient.get({
-      TableName: this.productRatingTable,
+      TableName: this.ratingTable,
       Key: {
         ratingId,
         userId
@@ -54,7 +54,7 @@ export class RatingAccess {
   async createProductRating(rating: Rating): Promise<Rating> {
     logger.info(`Creating new product rating ${rating}`)
     await this.docClient.put({
-      TableName: this.productRatingTable,
+      TableName: this.ratingTable,
 
       Item: rating
     }).promise()
@@ -67,7 +67,7 @@ export class RatingAccess {
     logger.info(`Provided parameters user: ${userId} and ratingId: ${ratingId}`)
 
     await this.docClient.delete({
-      TableName: this.productRatingTable,
+      TableName: this.ratingTable,
       Key: {
         ratingId,
         userId
@@ -83,7 +83,7 @@ export class RatingAccess {
     // Use # when using reserved keywords
     // https://stackoverflow.com/questions/36698945/scan-function-in-dynamodb-with-reserved-keyword-as-filterexpression-nodejs
     await this.docClient.update({
-      TableName: this.productRatingTable,
+      TableName: this.ratingTable,
       Key: {
         ratingId,
         userId
@@ -107,7 +107,7 @@ export class RatingAccess {
     logger.info(`Updating attachment url ${attachmentUrl} in database table for rating ${ratingId} owned by user ${userId}`)
 
     await this.docClient.update({
-      TableName: this.productRatingTable,
+      TableName: this.ratingTable,
       Key: {
         ratingId,
         userId

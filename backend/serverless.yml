@@ -17,9 +17,9 @@ provider:
     shouldStartNameWithService: true
 
   environment:
-    PRODUCT_RATING_TABLE: Product-Rating-${self:provider.stage}
-    PRODUCT_RATING_INDEX_BY_USERID: ProductRatingByUserId
-    PRODUCT_IMAGES_S3_BUCKET: my-product-rating-images-${self:provider.stage}
+    RATING_TABLE: Product-Rating-${self:provider.stage}
+    RATING_INDEX_BY_USERID: RatingsByUserId
+    PRODUCT_IMAGES_S3_BUCKET: my-ratings-images-${self:provider.stage}
     SIGNED_URL_EXPIRATION: 300
     AUTH_0_JWKS_URL: https://dev-lb67h78z.eu.auth0.com/.well-known/jwks.json
 
@@ -60,5 +60,5 @@ functions:
         Action:
           - dynamodb:Query
         Resource:
-          - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.PRODUCT_RATING_TABLE}
-          - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.FOOD_RATING_TABLE}/index/${self:provider.environment.PRODUCT_RATING_INDEX_BY_USERID}
+          - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.RATING_TABLE}
+          - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.RATING_TABLE}/index/${self:provider.environment.RATING_INDEX_BY_USERID}
