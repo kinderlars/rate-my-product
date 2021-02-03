@@ -47,7 +47,7 @@ functions:
     handler: src/lambda/auth/auth0Authorizer.handler
 
   GetProductRatings:
-    handler: src/lambda/http/getFoodRatings.handler
+    handler: src/lambda/http/getRating.handler
     events:
       - http:
           method: get

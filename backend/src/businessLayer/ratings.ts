@@ -1,10 +1,13 @@
 import * as uuid from 'uuid'
 import { createLogger } from '../utils/logger'
 import {RatingAccess} from '../dataLayer/ratingAccess';
-import {Rating} from "../models/Rating";
+
 import {CreateProductRequest} from "../requests/CreateProductRequest";
 import {UpdateProductRatingRequest} from "../requests/UpdateProductRatingRequest";
 import {ImageAccess} from "../dataLayer/imageAccess";
+import {Rating} from '../models/Rating';
+import {RatingUpdate} from "../models/RatingUpdate";
+
 
 const logger = createLogger('todos')
 const ratingAccess = new RatingAccess()
@@ -21,7 +24,7 @@ export async function getRating(userId: string, ratingId:string): Promise<Rating
   return await ratingAccess.getProductRating(userId,ratingId)
 }
 
-export async function createProductRating(userId: string,createProductRequest: CreateProductRequest): Promise<Rating> {
+export async function createProductRating(userId: string, createProductRequest: CreateProductRequest): Promise<Rating> {
 
   const id = uuid.v4()
   const now = new Date().toISOString()
@@ -54,22 +57,22 @@ export async function deleteTodo(userId: string, ratingId: string): Promise<bool
   return await ratingAccess.deleteTodo(ratingId, userId)
 }
 
-// export async function updateTodo(ratingId: string, userId: string, updateProductRatingRequest: UpdateProductRatingRequest):Promise<boolean>{
-//   logger.info(`Trying to update rating ${ratingId} for user ${userId} with payload ${JSON.stringify(updateProductRatingRequest)}`)
-//
-//   const rating = await ratingAccess.getProductRating(userId,ratingId)
-//   logger.info(`RATING ITEM: ${JSON.stringify(rating)}`)
-//
-//   if(!rating)
-//     throw new Error('No item found')
-//
-//   logger.info(`Starting update process`)
-//
-//   const result = await ratingAccess.updateTodo(rating,userId,updateTodoRequest as TodoUpdate)
-//
-//   return result
-//
-// }
+export async function updateRating(ratingId: string, userId: string, updateProductRatingRequest: UpdateProductRatingRequest):Promise<boolean>{
+  logger.info(`Trying to update rating ${ratingId} for user ${userId} with payload ${JSON.stringify(updateProductRatingRequest)}`)
+
+  const rating = await ratingAccess.getProductRating(userId,ratingId)
+  logger.info(`RATING ITEM: ${JSON.stringify(rating)}`)
+
+  if(!rating)
+    throw new Error('No item found')
+
+  logger.info(`Starting update process`)
+
+  const result = await ratingAccess.updateRating(ratingId,userId,updateProductRatingRequest as RatingUpdate)
+
+  return result
+
+}
 
 export async function updateAttachmentUrl(ratingId: string, userId: string, imageId: string): Promise<Rating>{
   logger.info(`Updating attachment url for image ${imageId} of rating ${ratingId} owned by user ${userId}`)
