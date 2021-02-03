@@ -17,9 +17,9 @@ provider:
     shouldStartNameWithService: true
 
   environment:
-    FOOD_RATING_TABLE: Food-Rating-${self:provider.stage}
-    FOOD_INDEX_BY_USERID: FoodRatingByUserId
-    FOOD_IMAGES_S3_BUCKET: my-food-rating-images-${self:provider.stage}
+    PRODUCT_RATING_TABLE: Product-Rating-${self:provider.stage}
+    PRODUCT_RATING_INDEX_BY_USERID: ProductRatingByUserId
+    PRODUCT_IMAGES_S3_BUCKET: my-product-rating-images-${self:provider.stage}
     SIGNED_URL_EXPIRATION: 300
     AUTH_0_JWKS_URL: https://dev-lb67h78z.eu.auth0.com/.well-known/jwks.json
 
@@ -39,8 +39,8 @@ custom:
     api:
       info:
         version: v0.0.1
-        title: Serverless food rating API
-        description: Serverless API for rating food
+        title: Serverless product rating API
+        description: Serverless API for rating products
 
 functions:
   Auth:
@@ -52,7 +52,7 @@ functions:
       - http:
           method: get
           authorizer: Auth
-          path: ratings
+          path: products/ratings
           cors: true
     iamRoleStatementsInherit: true
     iamRoleStatements:
@@ -60,5 +60,5 @@ functions:
         Action:
           - dynamodb:Query
         Resource:
-          - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.FOOD_RATING_TABLE}
-          - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.FOOD_RATING_TABLE}/index/${self:provider.environment.FOOD_INDEX_BY_USERID}
+          - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.PRODUCT_RATING_TABLE}
+          - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.FOOD_RATING_TABLE}/index/${self:provider.environment.PRODUCT_RATING_INDEX_BY_USERID}

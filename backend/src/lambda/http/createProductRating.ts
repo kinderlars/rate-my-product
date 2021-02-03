@@ -3,9 +3,9 @@ import 'source-map-support/register'
 import { APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult } from 'aws-lambda'
 
 import {createLogger} from "../../utils/logger";
-import {cr} from "../../businessLayer/ratings";
 import {CreateProductRequest} from "../../requests/CreateProductRequest";
 import {parseUserId} from "../../auth/utils";
+import {createProductRating} from "../../businessLayer/ratings";
 
 
 const logger = createLogger('create-rating')
@@ -20,7 +20,7 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
   const jwtToken = split[1]
   const userId = parseUserId(jwtToken)
 
-  const createdRating = await createTodo(userId,newRating)
+  const createdRating = await createProductRating(userId,newRating)
 
   return {
     statusCode: 201,

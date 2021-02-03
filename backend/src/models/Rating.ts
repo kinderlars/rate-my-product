@@ -1,7 +1,7 @@
-export interface Product{
+export interface Rating{
   userId: string
-  productId: string
-  name: string
+  ratingId: string
+  productName: string
   purchaseDate: string
   store: string
   stars: number
