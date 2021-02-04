@@ -1,9 +1,8 @@
 export interface Rating{
   userId: string
   ratingId: string
-  productName: string
+  productId: string
   purchaseDate: string
   store: string
   stars: number
-  attachmentUrl?: string
 }

@@ -3,6 +3,5 @@
  */
 export interface CreateProductRequest {
   productName: string
-  store: string
-  stars: number
+  brand: string
 }

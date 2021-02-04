@@ -17,6 +17,10 @@ export class RatingAccess {
       private readonly ratingIndexByUserId = process.env.RATING_INDEX_BY_USERID
   ){}
 
+  /**
+   * Get all product ratings for a certain userId
+   * @param userId
+   */
   async getAllProductRatings(userId:string): Promise<Rating[]> {
     logger.info(`Starting DynamoDB query on table ${this.ratingTable}`)
 
@@ -36,6 +40,11 @@ export class RatingAccess {
     return items as Rating[]
   }
 
+  /**
+   * Get a certain product rating based on the userId and ratingId
+   * @param userId
+   * @param ratingId
+   */
   async getProductRating(userId: string, ratingId: string): Promise<Rating>{
     logger.info(`Getting product rating ${ratingId} of user ${userId}`)
 
@@ -51,6 +60,10 @@ export class RatingAccess {
     return item as Rating
   }
 
+  /**
+   * Create a product rating
+   * @param rating
+   */
   async createProductRating(rating: Rating): Promise<Rating> {
     logger.info(`Creating new product rating ${rating}`)
     await this.docClient.put({
@@ -62,7 +75,12 @@ export class RatingAccess {
     return rating
   }
 
-  async deleteTodo(ratingId: string,userId: string):Promise<boolean>{
+  /**
+   * Delete a certain product rating
+   * @param ratingId
+   * @param userId
+   */
+  async deleteProductRating(ratingId: string,userId: string):Promise<boolean>{
     logger.info(`Deleting product rating ${ratingId}`)
     logger.info(`Provided parameters user: ${userId} and ratingId: ${ratingId}`)
 
