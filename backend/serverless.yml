@@ -1,5 +1,5 @@
 service:
-  name: rate-my-food-backend
+  name: rate-my-products-backend
 
 plugin:
   - serverless-webpack
@@ -17,9 +17,10 @@ provider:
     shouldStartNameWithService: true
 
   environment:
-    RATING_TABLE: Product-Rating-${self:provider.stage}
+    PRODUCTS_TABLE: Products-${self:provider.stage}
+    RATINGS_TABLE: Ratings-${self:provider.stage}
     RATING_INDEX_BY_USERID: RatingsByUserId
-    PRODUCT_IMAGES_S3_BUCKET: my-ratings-images-${self:provider.stage}
+    PRODUCT_IMAGES_S3_BUCKET: megustacc-products-images-${self:provider.stage}
     SIGNED_URL_EXPIRATION: 300
     AUTH_0_JWKS_URL: https://dev-lb67h78z.eu.auth0.com/.well-known/jwks.json
 
@@ -46,7 +47,23 @@ functions:
   Auth:
     handler: src/lambda/auth/auth0Authorizer.handler
 
-  GetProductRatings:
+  GetProducts:
+    handler: src/lambda/http/getProducts.handler
+    events:
+        - http:
+          method: get
+          authorizer: Auth
+          path: products
+          cors: true
+    iamRoleStatementsInherit: true
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+        Resource:
+          - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.PRODUCTS_TABLE}
+
+  GetRatings:
     handler: src/lambda/http/getRating.handler
     events:
       - http:
@@ -60,5 +77,82 @@ functions:
         Action:
           - dynamodb:Query
         Resource:
-          - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.RATING_TABLE}
-          - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.RATING_TABLE}/index/${self:provider.environment.RATING_INDEX_BY_USERID}
+          - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.RATINGS_TABLE}
+          - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.RATINGS_TABLE}/index/${self:provider.environment.RATING_INDEX_BY_USERID}
+
+resources:
+  Resources:
+    ProductsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: productId
+            AttributeType: S
+          - AttributeName: createdAt
+            AttributeType: S
+        KeySchema:
+          - AttributeName: productId
+            KeyType: HASH
+          - AttributeName: createdAt
+            KeyType: RANGE
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${self:provider.environment.PRODUCTS_TABLE}
+
+    RatingsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: ratingId
+            AttributeType: S
+          - AttributeName: userId
+            AttributeType: S
+          - AttributeName: productId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: ratingId
+            KeyType: HASH
+          - AttributeName: productId
+            KeyType: RANGE
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${self:provider.environment.RATINGS_TABLE}
+        LocalSecondaryIndexes:
+          - IndexName: ${self:provider.environment.RATING_INDEX_BY_USERID}
+            KeySchema:
+              - AttributeName: ratingId
+                KeyType: HASH
+              - AttributeName: userId
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL # What attributes will be copied to an index
+
+    ImageBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:provider.environment.PRODUCT_IMAGES_S3_BUCKET}
+        CorsConfiguration:
+          CorsRules:
+            - AllowedOrigins:
+                - '*'
+              AllowedHeaders:
+                - '*'
+              AllowedMethods:
+                - GET
+                - PUT
+                - POST
+                - DELETE
+                - HEAD
+              MaxAge: 3000
+
+    BucketPolicy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        PolicyDocument:
+          Id: PublicReadObject
+          Version: "2012-10-17"
+          Statement:
+            - Sid: PublicReadForGetBucketObjects
+              Effect: Allow
+              Principal: '*'
+              Action: 's3:GetObject'
+              Resource: 'arn:aws:s3:::${self:provider.environment.PRODUCT_IMAGES_S3_BUCKET}/*'
+        Bucket: !Ref ImageBucket

@@ -1,7 +1,7 @@
 {
-  "name": "rate-my-food-backend",
+  "name": "rate-my-product-backend",
   "version": "0.0.1",
-  "description": "Serverless food rating backend",
+  "description": "Serverless product rating backend",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

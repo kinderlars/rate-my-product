@@ -15,13 +15,14 @@ export class RatingAccess {
       private readonly docClient: DocumentClient = new XAWS.DynamoDB.DocumentClient(),
       private readonly ratingTable: string = process.env.RATING_TABLE,
       private readonly ratingIndexByUserId = process.env.RATING_INDEX_BY_USERID
-  ){}
+  ) {
+  }
 
   /**
-   * Get all product ratings for a certain userId
+   * Get all ratings for a certain userId
    * @param userId
    */
-  async getAllProductRatings(userId:string): Promise<Rating[]> {
+  async getAllUserRatings(userId: string): Promise<Rating[]> {
     logger.info(`Starting DynamoDB query on table ${this.ratingTable}`)
 
     const result = await this.docClient.query({
@@ -41,12 +42,12 @@ export class RatingAccess {
   }
 
   /**
-   * Get a certain product rating based on the userId and ratingId
+   * Get a certain rating
    * @param userId
    * @param ratingId
    */
-  async getProductRating(userId: string, ratingId: string): Promise<Rating>{
-    logger.info(`Getting product rating ${ratingId} of user ${userId}`)
+  async getUserRating(userId: string, ratingId: string): Promise<Rating> {
+    logger.info(`Getting rating ${ratingId} of user ${userId}`)
 
     const result = await this.docClient.get({
       TableName: this.ratingTable,
@@ -63,12 +64,12 @@ export class RatingAccess {
   /**
    * Create a product rating
    * @param rating
+   * TODO: Add productId later as it now does not make sense
    */
   async createProductRating(rating: Rating): Promise<Rating> {
     logger.info(`Creating new product rating ${rating}`)
     await this.docClient.put({
       TableName: this.ratingTable,
-
       Item: rating
     }).promise()
 
@@ -80,7 +81,7 @@ export class RatingAccess {
    * @param ratingId
    * @param userId
    */
-  async deleteProductRating(ratingId: string,userId: string):Promise<boolean>{
+  async deleteUserProductRating(ratingId: string, userId: string): Promise<boolean> {
     logger.info(`Deleting product rating ${ratingId}`)
     logger.info(`Provided parameters user: ${userId} and ratingId: ${ratingId}`)
 
@@ -95,7 +96,7 @@ export class RatingAccess {
     return true
   }
 
-  async updateRating(ratingId: string,userId: string, updateProductRatingRequest: UpdateProductRatingRequest): Promise<boolean> {
+  async updateUserRating(ratingId: string, userId: string, updateProductRatingRequest: UpdateProductRatingRequest): Promise<boolean> {
     logger.info(`Update process in data layer`)
 
     // Use # when using reserved keywords
@@ -120,21 +121,22 @@ export class RatingAccess {
 
     return true
   }
-
-  async updateAttachmentUrl(ratingId: string,userId: string,attachmentUrl: string){
-    logger.info(`Updating attachment url ${attachmentUrl} in database table for rating ${ratingId} owned by user ${userId}`)
-
-    await this.docClient.update({
-      TableName: this.ratingTable,
-      Key: {
-        ratingId,
-        userId
-      },
-      UpdateExpression: "set attachmentUrl = :url",
-      ExpressionAttributeValues: {
-        ":url": attachmentUrl
-      },
-      ReturnValues: "UPDATED_NEW"
-    }).promise()
-  }
 }
+
+//   async updateAttachmentUrl(ratingId: string,userId: string,attachmentUrl: string){
+//     logger.info(`Updating attachment url ${attachmentUrl} in database table for rating ${ratingId} owned by user ${userId}`)
+//
+//     await this.docClient.update({
+//       TableName: this.ratingTable,
+//       Key: {
+//         ratingId,
+//         userId
+//       },
+//       UpdateExpression: "set attachmentUrl = :url",
+//       ExpressionAttributeValues: {
+//         ":url": attachmentUrl
+//       },
+//       ReturnValues: "UPDATED_NEW"
+//     }).promise()
+//   }
+// }
