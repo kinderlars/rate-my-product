@@ -3,5 +3,5 @@
  */
 export interface UpdateProductRatingRequest {
   purchaseDate: string
-  rating: number
+  stars: number
 }

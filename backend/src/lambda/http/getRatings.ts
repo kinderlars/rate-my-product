@@ -1,34 +1,29 @@
 import 'source-map-support/register'
 
-import { APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult } from 'aws-lambda'
-
+import { APIGatewayProxyEvent, APIGatewayProxyResult, APIGatewayProxyHandler } from 'aws-lambda'
 import {createLogger} from "../../utils/logger";
-import {cr} from "../../businessLayer/ratings";
-import {CreateProductRequest} from "../../requests/CreateProductRequest";
 import {parseUserId} from "../../auth/utils";
+import {getAllRatings} from "../../businessLayer/ratings";
 
-
-const logger = createLogger('create-rating')
-
+const logger = createLogger('getTodos')
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-  logger.info(`Processing event: ${event}`)
-  const newRating: CreateProductRequest = JSON.parse(event.body)
+  logger.info(`Processing event ${event}`)
 
   const authorization = event.headers.Authorization
   const split = authorization.split(' ')
   const jwtToken = split[1]
   const userId = parseUserId(jwtToken)
 
-  const createdRating = await createTodo(userId,newRating)
+  const items = await getAllRatings(userId)
 
-  return {
-    statusCode: 201,
+  return{
+    statusCode: 200,
     headers: {
       'Access-Control-Allow-Origin': '*'
     },
     body: JSON.stringify({
-      item: createdRating
+      items
     })
   }
 }

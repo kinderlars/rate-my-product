@@ -2,20 +2,14 @@ import 'source-map-support/register'
 
 import { APIGatewayProxyEvent, APIGatewayProxyResult, APIGatewayProxyHandler } from 'aws-lambda'
 import {createLogger} from "../../utils/logger";
-import {getAllTodos} from "../../businessLayer/productRatings";
-import {parseUserId} from "../../auth/utils";
+import {getAllProducts} from "../../businessLayer/products";
 
-const logger = createLogger('getTodos')
+const logger = createLogger('get-products')
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   logger.info(`Processing event ${event}`)
 
-  const authorization = event.headers.Authorization
-  const split = authorization.split(' ')
-  const jwtToken = split[1]
-  const userId = parseUserId(jwtToken)
-
-  const items = await getAllTodos(userId)
+  const items = await getAllProducts()
 
   return{
     statusCode: 200,

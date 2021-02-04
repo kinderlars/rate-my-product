@@ -1,9 +1,7 @@
 export interface Product{
-  userId: string
   productId: string
-  name: string
-  purchaseDate: string
-  store: string
-  stars: number
+  productName: string
+  brand: string
+  createdAt: string
   attachmentUrl?: string
 }
