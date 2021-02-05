@@ -12,7 +12,7 @@ const logger = createLogger('todos')
 const ratingAccess = new RatingAccess()
 // const imageAccess = new ImageAccess()
 
-export async function getAllRatings(userId:string): Promise<Rating[]> {
+export async function getAllUserRatings(userId:string): Promise<Rating[]> {
   logger.info('Getting all ratings')
   return ratingAccess.getAllUserRatings(userId)
 }

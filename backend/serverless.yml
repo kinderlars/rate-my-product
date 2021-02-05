@@ -50,7 +50,7 @@ functions:
   GetProducts:
     handler: src/lambda/http/getProducts.handler
     events:
-        - http:
+      - http:
           method: get
           authorizer: Auth
           path: products
@@ -63,8 +63,24 @@ functions:
         Resource:
           - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.PRODUCTS_TABLE}
 
+  CreateProduct:
+    handler: src/lambda/http/createProduct.handler
+    events:
+      - http:
+          method: post
+          authorizer: Auth
+          path: products
+          cors: true
+    iamRoleStatementsInherit: true
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:putItem
+        Resource:
+          - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.PRODUCTS_TABLE}
+
   GetRatings:
-    handler: src/lambda/http/getRating.handler
+    handler: src/lambda/http/getRatings.handler
     events:
       - http:
           method: get

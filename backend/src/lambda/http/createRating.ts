@@ -3,9 +3,9 @@ import 'source-map-support/register'
 import { APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult } from 'aws-lambda'
 
 import {createLogger} from "../../utils/logger";
-import {CreateProductRequest} from "../../requests/CreateProductRequest";
 import {parseUserId} from "../../auth/utils";
 import {createProductRating} from "../../businessLayer/ratings";
+import {CreateProductRatingRequest} from "../../requests/CreateProductRatingRequest";
 
 
 const logger = createLogger('create-rating')
@@ -13,7 +13,7 @@ const logger = createLogger('create-rating')
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   logger.info(`Processing event: ${event}`)
-  const newRating: CreateProductRequest = JSON.parse(event.body)
+  const newRating: CreateProductRatingRequest = JSON.parse(event.body)
 
   const authorization = event.headers.Authorization
   const split = authorization.split(' ')
