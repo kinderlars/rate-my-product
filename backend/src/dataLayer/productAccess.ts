@@ -59,7 +59,6 @@ export class ProductAccess {
     logger.info(`Creating new product ${JSON.stringify(product)}`)
     await this.docClient.put({
       TableName: this.productTable,
-
       Item: product
     }).promise()
 

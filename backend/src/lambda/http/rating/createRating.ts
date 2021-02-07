@@ -2,10 +2,10 @@ import 'source-map-support/register'
 
 import { APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult } from 'aws-lambda'
 
-import {createLogger} from "../../utils/logger";
-import {createProductRating} from "../../businessLayer/ratings";
-import {parseUserId} from "../../auth/utils";
-import {CreateProductRatingRequest} from "../../requests/CreateProductRatingRequest";
+import {createLogger} from "../../../utils/logger";
+import {createProductRating} from "../../../businessLayer/ratings";
+import {parseUserId} from "../../../auth/utils";
+import {CreateProductRatingRequest} from "../../../requests/CreateProductRatingRequest";
 
 
 const logger = createLogger('create-product')

@@ -5,16 +5,18 @@ import {Product} from "../models/Product";
 import * as uuid from 'uuid';
 import {CreateProductRequest} from "../requests/CreateProductRequest";
 import {UpdateProductRequest} from "../requests/UpdateProductRequest";
+import {RatingAccess} from "../dataLayer/ratingAccess";
 
-const logger = createLogger('todos')
+const logger = createLogger('products')
 const productAccess = new ProductAccess()
+const ratingAccess = new RatingAccess()
 const imageAccess = new ImageAccess()
 
 /**
  * Get all products
  */
 export async function getAllProducts(): Promise<Product[]> {
-  logger.info('Getting all todos')
+  logger.info('Getting all products')
   return productAccess.getAllProducts()
 }
 
@@ -54,6 +56,16 @@ export async function deleteProduct(productId: string): Promise<boolean> {
 
   if(!product)
     throw new Error('No item found')
+
+  const ratings = await ratingAccess.getAllProductRatings(productId)
+
+  if(ratings){
+    logger.info(`Found ratings for product you are trying to delete`)
+    for(let rating of ratings){
+      logger.info(`Deleting rating ${rating.ratingId}`)
+      await ratingAccess.deleteRating(rating.userId,rating.ratingId)
+    }
+  }
 
   logger.info(`Product ${JSON.stringify(product)} is prepared for deletion`)
 

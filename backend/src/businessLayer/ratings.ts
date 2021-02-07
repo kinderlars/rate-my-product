@@ -6,6 +6,7 @@ import {UpdateProductRatingRequest} from "../requests/UpdateProductRatingRequest
 import {Rating} from '../models/Rating';
 import {RatingUpdate} from "../models/RatingUpdate";
 import {CreateProductRatingRequest} from "../requests/CreateProductRatingRequest";
+import {getProduct} from "./products";
 
 
 const logger = createLogger('todos')
@@ -85,6 +86,12 @@ export async function createProductRating(userId: string, productId: string, cre
   if(ratingExists)
     throw new Error('User already rated this product')
 
+  const productExists = await getProduct(productId)
+
+  if(!productExists){
+    throw new Error('No product found that you can attach the rating to')
+  }
+
   const newItem: Rating = {
     userId: userId,
     ratingId: id,
@@ -108,7 +115,7 @@ export async function createProductRating(userId: string, productId: string, cre
 export async function deleteRating(userId: string, ratingId: string): Promise<boolean> {
 
   const rating = await ratingAccess.getUserRating(userId,ratingId)
-  logger.info(`Return values of getTodo ${JSON.stringify(rating)}`)
+  logger.info(`Return values of getUserRating ${JSON.stringify(rating)}`)
 
   if(!rating)
     throw new Error('No item found')

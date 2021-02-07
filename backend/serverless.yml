@@ -49,7 +49,7 @@ functions:
     handler: src/lambda/auth/auth0Authorizer.handler
 
   GetProducts:
-    handler: src/lambda/http/getProducts.handler
+    handler: src/lambda/http/product/getProducts.handler
     events:
       - http:
           method: get
@@ -64,8 +64,24 @@ functions:
         Resource:
           - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.PRODUCTS_TABLE}
 
+  GetProduct:
+    handler: src/lambda/http/product/getProduct.handler
+    events:
+      - http:
+          method: get
+          authorizer: Auth
+          path: products/{productId}
+          cors: true
+    iamRoleStatementsInherit: true
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:getItem
+        Resource:
+          - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.PRODUCTS_TABLE}
+
   CreateProduct:
-    handler: src/lambda/http/createProduct.handler
+    handler: src/lambda/http/product/createProduct.handler
     events:
       - http:
           method: post
@@ -80,8 +96,27 @@ functions:
         Resource:
           - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.PRODUCTS_TABLE}
 
+  DeleteProduct:
+    handler: src/lambda/http/product/deleteProduct.handler
+    events:
+      - http:
+          method: delete
+          authorizer: Auth
+          path: products/{productId}
+          cors: true
+    iamRoleStatementsInherit: true
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:DeleteItem
+          - dynamodb:GetItem
+          - dynamodb:Scan
+        Resource:
+          - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.PRODUCTS_TABLE}
+          - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.USER_RATINGS_TABLE}
+
   GetAllRatings:
-    handler: src/lambda/http/getRatings.handler
+    handler: src/lambda/http/rating/getRatings.handler
     events:
       - http:
           method: get
@@ -98,7 +133,7 @@ functions:
           - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.USER_RATINGS_TABLE}
 
   GetUserRatings:
-    handler: src/lambda/http/getUserRatings.handler
+    handler: src/lambda/http/rating/getUserRatings.handler
     events:
       - http:
           method: get
@@ -114,7 +149,7 @@ functions:
           - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.USER_RATINGS_TABLE}
 
   GetProductRatings:
-    handler: src/lambda/http/getProductRatings.handler
+    handler: src/lambda/http/rating/getProductRatings.handler
     events:
       - http:
           method: get
@@ -131,8 +166,8 @@ functions:
           - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.USER_RATINGS_TABLE}
           - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.USER_RATINGS_TABLE}/index/${self:provider.environment.PRODUCT_INDEX_BY_USERID}
 
-  CreateProductRating:
-    handler: src/lambda/http/createProductRating.handler
+  CreateRating:
+    handler: src/lambda/http/rating/createRating.handler
     events:
       - http:
           method: post
@@ -145,9 +180,28 @@ functions:
         Action:
           - dynamodb:putItem
           - dynamodb:Query
+          - dynamodb:GetItem
         Resource:
           - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.USER_RATINGS_TABLE}
           - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.USER_RATINGS_TABLE}/index/${self:provider.environment.PRODUCT_INDEX_BY_USERID}
+          - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.PRODUCTS_TABLE}
+
+  DeleteRating:
+    handler: src/lambda/http/rating/deleteRating.handler
+    events:
+      - http:
+          method: delete
+          authorizer: Auth
+          path: products/ratings/{ratingId}
+          cors: true
+    iamRoleStatementsInherit: true
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:DeleteItem
+          - dynamodb:GetItem
+        Resource:
+          - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.USER_RATINGS_TABLE}
 
 resources:
   Resources:
@@ -157,13 +211,9 @@ resources:
         AttributeDefinitions:
           - AttributeName: productId
             AttributeType: S
-          - AttributeName: createdAt
-            AttributeType: S
         KeySchema:
           - AttributeName: productId
             KeyType: HASH
-          - AttributeName: createdAt
-            KeyType: RANGE
         BillingMode: PAY_PER_REQUEST
         TableName: ${self:provider.environment.PRODUCTS_TABLE}
 
