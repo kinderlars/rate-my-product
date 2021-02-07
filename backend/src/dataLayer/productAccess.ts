@@ -13,7 +13,7 @@ export class ProductAccess {
 
   constructor(
       private readonly docClient: DocumentClient = new XAWS.DynamoDB.DocumentClient(),
-      private readonly productTable: string = process.env.PRODUCT_TABLE
+      private readonly productTable: string = process.env.PRODUCTS_TABLE
   ){}
 
   /**
@@ -22,7 +22,7 @@ export class ProductAccess {
   async getAllProducts(): Promise<Product[]> {
     logger.info(`Starting DynamoDB query on table ${this.productTable}`)
 
-    const result = await this.docClient.query({
+    const result = await this.docClient.scan({
       TableName: this.productTable
     }).promise()
 

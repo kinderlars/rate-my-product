@@ -13,24 +13,57 @@ export class RatingAccess {
 
   constructor(
       private readonly docClient: DocumentClient = new XAWS.DynamoDB.DocumentClient(),
-      private readonly ratingTable: string = process.env.RATING_TABLE,
-      private readonly ratingIndexByUserId = process.env.RATING_INDEX_BY_USERID
+      private readonly ratingTable: string = process.env.USER_RATINGS_TABLE,
+      private readonly productIndexByUserId = process.env.PRODUCT_INDEX_BY_USERID
   ) {
   }
 
+  async getAllRatings(): Promise<Rating[]> {
+    logger.info(`Starting DynamoDB scan on table ${this.ratingTable}`)
+
+    const result = await this.docClient.scan({
+      TableName: this.ratingTable
+    }).promise()
+
+    logger.info(`Scan return values ${result}`)
+    const items = result.Items
+
+    logger.info(`Scan return ${items}`)
+    return items as Rating[]
+  }
+
   /**
-   * Get all ratings for a certain userId
-   * @param userId
+   * Get all user ratings
    */
-  async getAllUserRatings(userId: string): Promise<Rating[]> {
+  async getAllUserRatings(userId:string): Promise<Rating[]> {
     logger.info(`Starting DynamoDB query on table ${this.ratingTable}`)
 
     const result = await this.docClient.query({
       TableName: this.ratingTable,
-      IndexName: this.ratingIndexByUserId,
       KeyConditionExpression: 'userId = :userId',
       ExpressionAttributeValues: {
         ':userId': userId
+      }
+    }).promise()
+
+    logger.info(`Query return values ${result}`)
+
+    const items = result.Items
+    return items as Rating[]
+  }
+
+  /**
+   * Get all ratings
+   * Scan is used, as primary key is not accessed and therefore query cannot be used
+   */
+  async getAllProductRatings(productId:string): Promise<Rating[]> {
+    logger.info(`Starting DynamoDB scan on table ${this.ratingTable}`)
+
+    const result = await this.docClient.scan({
+      TableName: this.ratingTable,
+      FilterExpression: 'productId = :productId',
+      ExpressionAttributeValues: {
+        ':productId': productId
       }
     }).promise()
 
@@ -41,8 +74,29 @@ export class RatingAccess {
     return items as Rating[]
   }
 
+
   /**
-   * Get a certain rating
+   * Get product rating
+   * @param ratingId
+   * @param productId
+   */
+  async getProductRating(ratingId: string,productId:string): Promise<Rating> {
+    logger.info(`Getting rating ${ratingId} of product ${productId}`)
+
+    const result = await this.docClient.get({
+      TableName: this.ratingTable,
+      Key: {
+        ratingId,
+        productId
+      }
+    }).promise()
+
+    const item = result.Item
+    return item as Rating
+  }
+
+  /**
+   * Get user rating
    * @param userId
    * @param ratingId
    */
@@ -52,8 +106,8 @@ export class RatingAccess {
     const result = await this.docClient.get({
       TableName: this.ratingTable,
       Key: {
-        ratingId,
-        userId
+        userId,
+        ratingId
       }
     }).promise()
 
@@ -62,9 +116,31 @@ export class RatingAccess {
   }
 
   /**
+   * Get user rating for a product
+   * @param userId
+   * @param productId
+   */
+  async getUserProductRating(userId: string, productId: string): Promise<Rating> {
+    logger.info(`Getting product ${productId} rating of user ${userId}`)
+
+    const result = await this.docClient.query({
+      TableName: this.ratingTable,
+      IndexName: this.productIndexByUserId,
+      KeyConditionExpression: 'userId = :userId and productId = :productId',
+      ExpressionAttributeValues: {
+        ':userId': userId,
+        ':productId' : productId
+      }
+    }).promise()
+
+    const item = result.Items[0]
+    return item as Rating
+  }
+
+  /**
    * Create a product rating
    * @param rating
-   * TODO: Add productId later as it now does not make sense
+
    */
   async createProductRating(rating: Rating): Promise<Rating> {
     logger.info(`Creating new product rating ${rating}`)
@@ -81,22 +157,22 @@ export class RatingAccess {
    * @param ratingId
    * @param userId
    */
-  async deleteUserProductRating(ratingId: string, userId: string): Promise<boolean> {
+  async deleteUserProductRating(userId: string,ratingId: string): Promise<boolean> {
     logger.info(`Deleting product rating ${ratingId}`)
     logger.info(`Provided parameters user: ${userId} and ratingId: ${ratingId}`)
 
     await this.docClient.delete({
       TableName: this.ratingTable,
       Key: {
-        ratingId,
-        userId
+        userId,
+        ratingId
       }
     }).promise()
 
     return true
   }
 
-  async updateUserRating(ratingId: string, userId: string, updateProductRatingRequest: UpdateProductRatingRequest): Promise<boolean> {
+  async updateUserRating(userId: string, ratingId: string, updateProductRatingRequest: UpdateProductRatingRequest): Promise<boolean> {
     logger.info(`Update process in data layer`)
 
     // Use # when using reserved keywords
