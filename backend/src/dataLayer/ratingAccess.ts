@@ -157,8 +157,8 @@ export class RatingAccess {
    * @param ratingId
    * @param userId
    */
-  async deleteUserProductRating(userId: string,ratingId: string): Promise<boolean> {
-    logger.info(`Deleting product rating ${ratingId}`)
+  async deleteRating(userId: string,ratingId: string): Promise<boolean> {
+    logger.info(`Deleting rating ${ratingId}`)
     logger.info(`Provided parameters user: ${userId} and ratingId: ${ratingId}`)
 
     await this.docClient.delete({

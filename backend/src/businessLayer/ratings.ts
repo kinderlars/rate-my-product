@@ -115,7 +115,7 @@ export async function deleteRating(userId: string, ratingId: string): Promise<bo
 
   logger.info(`Rating ${JSON.stringify(rating)} for user ${userId} is prepared for deletion`)
 
-  return await ratingAccess.deleteUserProductRating(userId,ratingId)
+  return await ratingAccess.deleteRating(userId,ratingId)
 }
 
 /**
