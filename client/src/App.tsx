@@ -111,7 +111,7 @@ export default class App extends Component<AppProps, AppState> {
           path="/ratings"
           exact
           render={props => {
-            return <Ratings auth={this.props.auth} product={this.props.} history={}
+            return <Ratings {...props} auth={this.props.auth} />
           }}
         />
         <Route component={NotFound} />

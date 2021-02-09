@@ -9,7 +9,8 @@ import {
   Icon,
   Input,
   Image,
-  Loader
+  Loader,
+  Form
 } from 'semantic-ui-react'
 
 import { createProduct, deleteProduct, getProducts, patchProduct } from '../api/products-api'
@@ -40,6 +41,10 @@ export class Products extends React.PureComponent<ProductsProps, ProductState> {
     this.setState({ newProductName: event.target.value })
   }
 
+  handleBrandChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ newBrandName: event.target.value })
+  }
+
   onEditButtonClick = (productId: string) => {
     this.props.history.push(`/products/${productId}/edit`)
   }
@@ -48,7 +53,7 @@ export class Products extends React.PureComponent<ProductsProps, ProductState> {
     try {
       const newProduct = await createProduct(this.props.auth.getIdToken(), {
         productName: this.state.newProductName,
-         brand: this.state.newBrandName
+        brand: this.state.newBrandName
       })
       this.setState({
         products: [...this.state.products, newProduct],
@@ -108,26 +113,17 @@ export class Products extends React.PureComponent<ProductsProps, ProductState> {
 
   renderCreateProductInput() {
     return (
-      <Grid.Row>
-        <Grid.Column width={16}>
-          <Input
-            action={{
-              color: 'teal',
-              labelPosition: 'left',
-              icon: 'add',
-              content: 'New Product',
-              onClick: this.onProductCreate
-            }}
-            fluid
-            actionPosition="left"
-            placeholder="Product Name"
-            onChange={this.handleNameChange}
-          />
-        </Grid.Column>
-        <Grid.Column width={16}>
-          <Divider />
-        </Grid.Column>
-      </Grid.Row>
+      <Form onClick={this.onProductCreate}>
+        <Form.Field>
+          <label>Product Name</label>
+          <input onChange={this.handleNameChange} placeholder='Product Name' />
+        </Form.Field>
+        <Form.Field>
+          <label>Brand Name</label>
+          <input onChange={this.handleBrandChange} placeholder='Brand Name' />
+        </Form.Field>
+        <Button type='submit'>Add Product</Button>
+      </Form>
     )
   }
 
@@ -143,7 +139,7 @@ export class Products extends React.PureComponent<ProductsProps, ProductState> {
     return (
       <Grid.Row>
         <Loader indeterminate active inline="centered">
-          Loading TODOs
+          Loading Products
         </Loader>
       </Grid.Row>
     )
@@ -155,11 +151,14 @@ export class Products extends React.PureComponent<ProductsProps, ProductState> {
         {this.state.products.map((product, pos) => {
           return (
             <Grid.Row key={product.productId}>
-              <Grid.Column width={10} verticalAlign="middle">
+              <Grid.Column field="Product Name" width={5} verticalAlign="middle">
                 {product.productName}
               </Grid.Column>
-              <Grid.Column width={3} floated="right">
+              <Grid.Column width={4} verticalAlign="middle">
                 {product.brand}
+              </Grid.Column>
+              <Grid.Column width={5} verticalAlign="middle">
+                {product.productId}
               </Grid.Column>
               <Grid.Column width={1} floated="right">
                 <Button

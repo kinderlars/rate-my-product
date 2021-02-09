@@ -16,11 +16,10 @@ import Auth from '../auth/Auth'
 import { Rating } from '../types/Rating'
 
 import {createRating, deleteRating, getRatings, patchRating} from "../api/ratings-api";
-import {Product} from "../types/Product";
+
 
 interface RatingsProps {
   auth: Auth
-  product: Product
   history: History
 }
 
@@ -28,6 +27,7 @@ interface RatingState {
   ratings: Rating[]
   newStarRating: number,
   newStoreName: string,
+  productId: string,
   loadingRatings: boolean,
   newAttachmentUrl: string
 }
@@ -37,6 +37,7 @@ export class Ratings extends React.PureComponent<RatingsProps, RatingState> {
     ratings: [],
     newStarRating: 0,
     newStoreName: '',
+    productId: '',
     loadingRatings: true,
     newAttachmentUrl: ''
   }
@@ -55,7 +56,7 @@ export class Ratings extends React.PureComponent<RatingsProps, RatingState> {
   onRatingCreate = async (event: React.ChangeEvent<HTMLButtonElement>) => {
     try {
       const purchaseDate = this.calculatePurchaseDate()
-      const newRating = await createRating(this.props.auth.getIdToken(),this.props.product.productId, {
+      const newRating = await createRating(this.props.auth.getIdToken(),this.state.productId,{
         store: this.state.newStoreName,
         stars: this.state.newStarRating,
         purchaseDate,
