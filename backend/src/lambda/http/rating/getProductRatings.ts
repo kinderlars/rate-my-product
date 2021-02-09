@@ -4,7 +4,7 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult, APIGatewayProxyHandler } f
 import {createLogger} from "../../../utils/logger";
 import {getAllProductRatings} from "../../../businessLayer/ratings";
 
-const logger = createLogger('getTodos')
+const logger = createLogger('getRatings')
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   logger.info(`Processing event ${event}`)

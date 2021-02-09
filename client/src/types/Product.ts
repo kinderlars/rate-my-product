@@ -3,5 +3,5 @@ export interface Product{
   productName: string
   brand: string
   createdAt: string
-  attachmentUrl: string
+  attachmentUrl?: string
 }

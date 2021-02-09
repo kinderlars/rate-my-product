@@ -5,7 +5,7 @@ import {createLogger} from '../utils/logger'
 import {Rating} from "../models/Rating";
 import {UpdateProductRatingRequest} from "../requests/UpdateProductRatingRequest";
 
-const logger = createLogger('todo-access')
+const logger = createLogger('rating-access')
 
 const XAWS = AWSXRay.captureAWS(AWS)
 
@@ -112,6 +112,8 @@ export class RatingAccess {
     }).promise()
 
     const item = result.Item
+
+    logger.info(`Returning rating item ${JSON.stringify(item)}`)
     return item as Rating
   }
 
@@ -172,7 +174,7 @@ export class RatingAccess {
     return true
   }
 
-  async updateUserRating(userId: string, ratingId: string, updateProductRatingRequest: UpdateProductRatingRequest): Promise<boolean> {
+  async updateRating(userId: string, ratingId: string, updateProductRatingRequest: UpdateProductRatingRequest): Promise<boolean> {
     logger.info(`Update process in data layer`)
 
     // Use # when using reserved keywords
@@ -184,9 +186,6 @@ export class RatingAccess {
         userId
       },
       UpdateExpression: "set purchaseDate = :purchaseDate, stars = :stars",
-      ExpressionAttributeNames: {
-        "#name": "name"
-      },
       ExpressionAttributeValues: {
         ":purchaseDate": updateProductRatingRequest.purchaseDate,
         ":stars": updateProductRatingRequest.stars

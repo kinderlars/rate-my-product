@@ -5,7 +5,7 @@ import {createLogger} from '../utils/logger'
 import {Product} from "../models/Product";
 import {UpdateProductRequest} from "../requests/UpdateProductRequest";
 
-const logger = createLogger('todo-access')
+const logger = createLogger('product-access')
 
 const XAWS = AWSXRay.captureAWS(AWS)
 

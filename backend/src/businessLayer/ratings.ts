@@ -9,7 +9,7 @@ import {CreateProductRatingRequest} from "../requests/CreateProductRatingRequest
 import {getProduct} from "./products";
 
 
-const logger = createLogger('todos')
+const logger = createLogger('ratings')
 const ratingAccess = new RatingAccess()
 // const imageAccess = new ImageAccess()
 
@@ -131,7 +131,7 @@ export async function deleteRating(userId: string, ratingId: string): Promise<bo
  * @param userId
  * @param updateProductRatingRequest
  */
-export async function updateUserRating(userId: string, ratingId: string,updateProductRatingRequest: UpdateProductRatingRequest):Promise<boolean>{
+export async function updateRating(userId: string, ratingId: string,updateProductRatingRequest: UpdateProductRatingRequest):Promise<boolean>{
   logger.info(`Trying to update rating ${ratingId} for user ${userId} with payload ${JSON.stringify(updateProductRatingRequest)}`)
 
   const rating = await ratingAccess.getUserRating(userId,ratingId)
@@ -142,7 +142,7 @@ export async function updateUserRating(userId: string, ratingId: string,updatePr
 
   logger.info(`Starting update process`)
 
-  const result = await ratingAccess.updateUserRating(userId,ratingId,updateProductRatingRequest as RatingUpdate)
+  const result = await ratingAccess.updateRating(userId,ratingId,updateProductRatingRequest as RatingUpdate)
 
   return result
 

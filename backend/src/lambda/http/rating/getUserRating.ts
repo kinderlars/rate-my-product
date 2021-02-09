@@ -5,7 +5,7 @@ import {createLogger} from "../../../utils/logger";
 import {getUserRating} from "../../../businessLayer/ratings";
 import {parseUserId} from "../../../auth/utils";
 
-const logger = createLogger('getTodos')
+const logger = createLogger('getUserRatings')
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   logger.info(`Processing event ${event}`)
