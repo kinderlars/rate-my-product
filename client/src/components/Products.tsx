@@ -49,7 +49,7 @@ export class Products extends React.PureComponent<ProductsProps, ProductState> {
     this.props.history.push(`/products/${productId}/edit`)
   }
 
-  onProductCreate = async (event: React.ChangeEvent<HTMLButtonElement>) => {
+  onProductCreate = async (event: React.FormEvent<HTMLFormElement>) => {
     try {
       const newProduct = await createProduct(this.props.auth.getIdToken(), {
         productName: this.state.newProductName,
@@ -113,7 +113,7 @@ export class Products extends React.PureComponent<ProductsProps, ProductState> {
 
   renderCreateProductInput() {
     return (
-      <Form onClick={this.onProductCreate}>
+      <Form  onSubmit={this.onProductCreate}>
         <Form.Field>
           <label>Product Name</label>
           <input onChange={this.handleNameChange} placeholder='Product Name' />

@@ -9,7 +9,8 @@ import {
   Input,
   Image,
   Loader,
-  Grid
+  Grid,
+  Form
 } from 'semantic-ui-react'
 
 import Auth from '../auth/Auth'
@@ -42,9 +43,14 @@ export class Ratings extends React.PureComponent<RatingsProps, RatingState> {
     newAttachmentUrl: ''
   }
 
+  handleProductIdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ productId: event.target.value })
+  }
+
   handleStarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ newStarRating: +event.target.value })
   }
+
   handleStoreChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ newStoreName: event.target.value })
   }
@@ -53,7 +59,7 @@ export class Ratings extends React.PureComponent<RatingsProps, RatingState> {
     this.props.history.push(`/products/ratings/${ratingId}/edit`)
   }
 
-  onRatingCreate = async (event: React.ChangeEvent<HTMLButtonElement>) => {
+  onRatingCreate = async (event: React.FormEvent<HTMLFormElement>) => {
     try {
       const purchaseDate = this.calculatePurchaseDate()
       const newRating = await createRating(this.props.auth.getIdToken(),this.state.productId,{
@@ -118,28 +124,23 @@ export class Ratings extends React.PureComponent<RatingsProps, RatingState> {
   }
 
   renderCreateRatingInput() {
-    return (
-      <Grid.Row>
-        <Grid.Column width={16}>
-      <Input
-        action={{
-      color: 'teal',
-        labelPosition: 'left',
-        icon: 'add',
-        content: 'New Rating',
-        onClick: this.onRatingCreate
-    }}
-    fluid
-    actionPosition="left"
-    placeholder="Rating Stars"
-    onChange={this.handleStarChange}
-    />
-    </Grid.Column>
-    <Grid.Column width={16}>
-      <Divider />
-      </Grid.Column>
-      </Grid.Row>
-  )
+    return(
+      <Form onSubmit={this.onRatingCreate}>
+        <Form.Field>
+          <label>ProductId</label>
+          <input onChange={this.handleProductIdChange} placeholder='ProductID' />
+        </Form.Field>
+        <Form.Field>
+          <label>Store Name</label>
+          <input onChange={this.handleStoreChange} placeholder='Store Name' />
+        </Form.Field>
+        <Form.Field>
+          <label>Rating</label>
+          <input onChange={this.handleStarChange} placeholder='Rating' />
+        </Form.Field>
+        <Button type='submit'>Add Rating</Button>
+      </Form>
+    )
   }
 
   renderRatings() {
