@@ -10,7 +10,7 @@ import {
   Input,
   Image,
   Loader,
-  Form
+  Form, Table
 } from 'semantic-ui-react'
 
 import { createProduct, deleteProduct, getProducts, patchProduct } from '../api/products-api'
@@ -146,48 +146,49 @@ export class Products extends React.PureComponent<ProductsProps, ProductState> {
   }
 
   renderProductsList() {
-    return (
-      <Grid padded>
+    return(
+      <Table basic='very' celled collapsing>
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell>Product Name</Table.HeaderCell>
+            <Table.HeaderCell>Brand</Table.HeaderCell>
+            <Table.HeaderCell>Product ID</Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
         {this.state.products.map((product, pos) => {
           return (
-            <Grid.Row key={product.productId}>
-              <Grid.Column field="Product Name" width={5} verticalAlign="middle">
-                {product.productName}
-              </Grid.Column>
-              <Grid.Column width={4} verticalAlign="middle">
-                {product.brand}
-              </Grid.Column>
-              <Grid.Column width={5} verticalAlign="middle">
-                {product.productId}
-              </Grid.Column>
-              <Grid.Column width={1} floated="right">
-                <Button
-                  icon
-                  color="blue"
-                  onClick={() => this.onEditButtonClick(product.productId)}
-                >
-                  <Icon name="pencil" />
-                </Button>
-              </Grid.Column>
-              <Grid.Column width={1} floated="right">
-                <Button
-                  icon
-                  color="red"
-                  onClick={() => this.onProductDelete(product.productId)}
-                >
-                  <Icon name="delete" />
-                </Button>
-              </Grid.Column>
-              {product.attachmentUrl && (
-                <Image src={product.attachmentUrl} size="small" wrapped />
-              )}
-              <Grid.Column width={16}>
-                <Divider />
-              </Grid.Column>
-            </Grid.Row>
-          )
-        })}
-      </Grid>
+              <Table.Body>
+                <Table.Row>
+                  <Table.Cell width={5}>
+                    {product.productName}
+                  </Table.Cell>
+                  <Table.Cell width={5}>
+                    {product.brand}
+                  </Table.Cell>
+                  <Table.Cell width={5}>
+                    {product.productId}
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Button
+                      icon
+                      color="blue"
+                      onClick={() => this.onEditButtonClick(product.productId)}
+                    >
+                      <Icon name="pencil" />
+                    </Button>
+                    <Button
+                      icon
+                      color="red"
+                      onClick={() => this.onProductDelete(product.productId)}
+                    >
+                      <Icon name="delete" />
+                    </Button>
+                  </Table.Cell>
+                </Table.Row>
+              </Table.Body>
+          )})
+        }
+      </Table>
     )
   }
 }

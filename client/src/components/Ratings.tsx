@@ -163,40 +163,47 @@ export class Ratings extends React.PureComponent<RatingsProps, RatingState> {
 
   renderRatingsList() {
     return(
-    this.state.ratings.map((rating, pos) => {
-      return (
       <Table basic='very' celled collapsing>
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>Rating ID</Table.HeaderCell>
+            <Table.HeaderCell>Product ID</Table.HeaderCell>
             <Table.HeaderCell>Stars</Table.HeaderCell>
             <Table.HeaderCell>Purchase Date</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
-        <Table.Body>
-          <Table.Row>
-            <Table.Cell width={9}>
-              {rating.ratingId}
-            </Table.Cell>
-            <Table.Cell width={5}>
-              {rating.stars}
-            </Table.Cell>
-            <Table.Cell width={5}>
-              {rating.purchaseDate}
-            </Table.Cell>
-            <Table.Cell>
-              <Button
-                icon
-                color="red"
-                onClick={() => this.onRatingDelete(rating.ratingId)}
-                >
-                <Icon name="delete" />
-              </Button>
-            </Table.Cell>
-          </Table.Row>
-        </Table.Body>
+        {
+          this.state.ratings.map((rating, pos) => {
+            return (
+                <Table.Body>
+                  <Table.Row>
+                    <Table.Cell width={7}>
+                      {rating.ratingId}
+                    </Table.Cell>
+                    <Table.Cell width={7}>
+                      {rating.productId}
+                    </Table.Cell>
+                    <Table.Cell width={3}>
+                      {rating.stars}
+                    </Table.Cell>
+                    <Table.Cell width={7}>
+                      {rating.purchaseDate}
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Button
+                        icon
+                        color="red"
+                        onClick={() => this.onRatingDelete(rating.ratingId)}
+                      >
+                        <Icon name="delete"/>
+                      </Button>
+                    </Table.Cell>
+                  </Table.Row>
+                </Table.Body>
+                )})
+        }
       </Table>
-    )}))
+    )
   }
 
   calculatePurchaseDate(): string {
