@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Create Rating",
+  "type": "object",
+  "properties": {
+    "purchaseDate": {
+      "type": "string"
+    },
+    "store": {
+      "type": "string"
+    },
+    "stars": {
+      "type": "number"
+    },
+    "attachmentUrl": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "purchaseDate",
+    "store",
+    "stars",
+    "attachmentUrl"
+  ],
+  "additionalProperties": false
+}

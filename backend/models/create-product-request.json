@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Create Product",
+  "type": "object",
+  "properties": {
+    "productName": {
+      "type": "string"
+    },
+    "vendor": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "productName",
+    "vendor"
+  ],
+  "additionalProperties": false
+}

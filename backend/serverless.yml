@@ -43,6 +43,16 @@ custom:
         version: v0.0.1
         title: Serverless product rating API
         description: Serverless API for rating products
+    models:
+      - name: CreateProductRequest
+        contentType: application/json
+        schema: ${file(models/create-product-request.json)}
+      - name: CreateRatingRequest
+        contentType: application/json
+        schema: ${file(models/create-rating-request.json)}
+      - name: UpdateRatingRequest
+        contentType: application/json
+        schema: ${file(models/update-rating-request.json)}
 
 functions:
   Auth:
@@ -88,6 +98,12 @@ functions:
           authorizer: Auth
           path: products
           cors: true
+          reqValidatorName: RequestBodyValidator
+          documentation:
+            summary: "Create new Product"
+            description: "Create new Product"
+            requestModels:
+              "application/json": CreateProductRequest
     iamRoleStatementsInherit: true
     iamRoleStatements:
       - Effect: Allow
@@ -174,6 +190,12 @@ functions:
           authorizer: Auth
           path: products/{productId}/ratings
           cors: true
+          reqValidatorName: RequestBodyValidator
+          documentation:
+            summary: "Create new Rating"
+            description: "Create new Rating"
+            requestModels:
+              "application/json": CreateRatingRequest
     iamRoleStatementsInherit: true
     iamRoleStatements:
       - Effect: Allow
@@ -194,6 +216,12 @@ functions:
           authorizer: Auth
           path: products/ratings/{ratingId}
           cors: true
+          reqValidatorName: RequestBodyValidator
+          documentation:
+            summary: "Update Rating"
+            description: "Update Rating"
+            requestModels:
+              "application/json": UpdateRatingRequest
     iamRoleStatementsInherit: true
     iamRoleStatements:
       - Effect: Allow
@@ -222,6 +250,15 @@ functions:
 
 resources:
   Resources:
+    RequestBodyValidator:
+      Type: AWS::ApiGateway::RequestValidator
+      Properties:
+        Name: 'request-body-validator'
+        RestApiId:
+          Ref: ApiGatewayRestApi
+        ValidateRequestBody: true
+        ValidateRequestParameters: false
+
     ProductsTable:
       Type: AWS::DynamoDB::Table
       Properties:
