@@ -6,7 +6,9 @@ What does the service do?<br>
 The service allows logged in users to create products and ratings. It is worth pointing out, that all logged in users see all products and ratings
 , but cannot modify or delete ratings that were not created by them. 
 Never the less, if a user decides to delete a product, the linked ratings will also be dropped. 
-The logic of dropping all ratings when a product is deleted was chosen on purpose to not have unrelated ratings in the Dynamo table.
+The logic of dropping all ratings when a product is deleted was chosen on purpose to not have unlinked ratings in the Dynamo table. On top, the
+ additional logic required to only delete a product, if no other user has ratings linked to it, was postponed and might be implemented after the
+  capstone project. 
 
 ##Frontend
 The frontend was implemented using React and consumes the backend API.
