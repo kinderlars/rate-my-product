@@ -5,7 +5,7 @@ import {createLogger} from '../utils/logger'
 import {Product} from "../models/Product";
 import {UpdateProductRequest} from "../requests/UpdateProductRequest";
 
-const logger = createLogger('todo-access')
+const logger = createLogger('product-access')
 
 const XAWS = AWSXRay.captureAWS(AWS)
 
@@ -13,7 +13,7 @@ export class ProductAccess {
 
   constructor(
       private readonly docClient: DocumentClient = new XAWS.DynamoDB.DocumentClient(),
-      private readonly productTable: string = process.env.PRODUCT_TABLE
+      private readonly productTable: string = process.env.PRODUCTS_TABLE
   ){}
 
   /**
@@ -22,7 +22,7 @@ export class ProductAccess {
   async getAllProducts(): Promise<Product[]> {
     logger.info(`Starting DynamoDB query on table ${this.productTable}`)
 
-    const result = await this.docClient.query({
+    const result = await this.docClient.scan({
       TableName: this.productTable
     }).promise()
 
@@ -59,7 +59,6 @@ export class ProductAccess {
     logger.info(`Creating new product ${JSON.stringify(product)}`)
     await this.docClient.put({
       TableName: this.productTable,
-
       Item: product
     }).promise()
 

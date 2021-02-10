@@ -1,4 +1,4 @@
-export interface CreateProductRequest {
+export interface UpdateProductRequest {
   productName: string
   brand: string
 }
