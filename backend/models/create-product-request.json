@@ -6,13 +6,13 @@
     "productName": {
       "type": "string"
     },
-    "vendor": {
+    "brand": {
       "type": "string"
     }
   },
   "required": [
     "productName",
-    "vendor"
+    "brand"
   ],
   "additionalProperties": false
 }
