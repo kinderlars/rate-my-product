@@ -216,6 +216,12 @@ functions:
           authorizer: Auth
           path: products/ratings/{ratingId}
           cors: true
+          reqValidatorName: RequestBodyValidator
+          documentation:
+            summary: "Update Rating"
+            description: "Update Rating"
+            requestModels:
+              "application/json": UpdateRatingRequest
     iamRoleStatementsInherit: true
     iamRoleStatements:
       - Effect: Allow
@@ -244,6 +250,15 @@ functions:
 
 resources:
   Resources:
+    RequestBodyValidator:
+      Type: AWS::ApiGateway::RequestValidator
+      Properties:
+        Name: 'request-body-validator'
+        RestApiId:
+          Ref: ApiGatewayRestApi
+        ValidateRequestBody: true
+        ValidateRequestParameters: false
+
     ProductsTable:
       Type: AWS::DynamoDB::Table
       Properties:
