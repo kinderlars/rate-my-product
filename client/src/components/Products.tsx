@@ -151,6 +151,7 @@ export class Products extends React.PureComponent<ProductsProps, ProductState> {
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>Product Name</Table.HeaderCell>
+            <Table.HeaderCell>Image</Table.HeaderCell>
             <Table.HeaderCell>Brand</Table.HeaderCell>
             <Table.HeaderCell>Product ID</Table.HeaderCell>
           </Table.Row>
@@ -159,8 +160,11 @@ export class Products extends React.PureComponent<ProductsProps, ProductState> {
           return (
               <Table.Body>
                 <Table.Row>
-                  <Table.Cell width={5}>
+                  <Table.Cell width={4}>
                     {product.productName}
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Image src={product.attachmentUrl} size="small" />
                   </Table.Cell>
                   <Table.Cell width={5}>
                     {product.brand}
