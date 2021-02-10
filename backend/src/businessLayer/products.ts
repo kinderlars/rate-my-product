@@ -91,13 +91,13 @@ export async function updateProduct(productId: string, updateProductRequest: Upd
 
 export async function updateAttachmentUrl(productId: string, imageId: string): Promise<Product>{
   logger.info(`Updating attachment url for image ${imageId} of product ${productId}`)
-  const bucketName = process.env.IMAGES_S3_BUCKET
+  const bucketName = process.env.PRODUCT_IMAGES_S3_BUCKET
   const attachmentUrl = `https://${bucketName}.s3.amazonaws.com/${imageId}`
 
   await productAccess.updateAttachmentUrl(productId,attachmentUrl)
 
   const updatedProduct = await getProduct(productId)
-  logger.info(`Fetching updated todo ${JSON.stringify(updatedProduct)}`)
+  logger.info(`Fetching updated product ${JSON.stringify(updatedProduct)}`)
 
   return updatedProduct
 }
