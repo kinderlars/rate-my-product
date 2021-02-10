@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Update Rating",
+  "type": "object",
+  "properties": {
+    "purchaseDate": {
+      "type": "string"
+    },
+    "stars": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "purchaseDate",
+    "stars"
+  ],
+  "additionalProperties": false
+}
