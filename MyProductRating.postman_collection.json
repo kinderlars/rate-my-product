@@ -1,0 +1,423 @@
+{
+	"info": {
+		"_postman_id": "25c203ab-a3fd-4cb6-bfaa-3030bfdde442",
+		"name": "MyProductRating",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "Get all products",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{apiId}}.execute-api.{{region}}.amazonaws.com/dev/products",
+							"protocol": "https",
+							"host": [
+								"{{apiId}}",
+								"execute-api",
+								"{{region}}",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create new Product",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"productName\": \"Apples\",\n    \"brand\": \"Aldi\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{apiId}}.execute-api.{{region}}.amazonaws.com/dev/products",
+							"protocol": "https",
+							"host": [
+								"{{apiId}}",
+								"execute-api",
+								"{{region}}",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Product",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{apiId}}.execute-api.{{region}}.amazonaws.com/dev/products/3351849a-b9b9-4663-bbef-954843a912fa",
+							"protocol": "https",
+							"host": [
+								"{{apiId}}",
+								"execute-api",
+								"{{region}}",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"products",
+								"3351849a-b9b9-4663-bbef-954843a912fa"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Product",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{apiId}}.execute-api.{{region}}.amazonaws.com/dev/products/1a6156ee-4916-48ea-9a7f-e25714b53417",
+							"protocol": "https",
+							"host": [
+								"{{apiId}}",
+								"execute-api",
+								"{{region}}",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"products",
+								"1a6156ee-4916-48ea-9a7f-e25714b53417"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": null
+					},
+					"response": []
+				},
+				{
+					"name": "Get Presigned URL",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{apiId}}.execute-api.{{region}}.amazonaws.com/dev/products/6dda094d-809c-4fea-98e6-553655638a54/attachment",
+							"protocol": "https",
+							"host": [
+								"{{apiId}}",
+								"execute-api",
+								"{{region}}",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"products",
+								"6dda094d-809c-4fea-98e6-553655638a54",
+								"attachment"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Ratings",
+			"item": [
+				{
+					"name": "Get all ratings for a product",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{apiId}}.execute-api.{{region}}.amazonaws.com/dev/products/1a6156ee-4916-48ea-9a7f-e25714b53417/ratings",
+							"protocol": "https",
+							"host": [
+								"{{apiId}}",
+								"execute-api",
+								"{{region}}",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"products",
+								"1a6156ee-4916-48ea-9a7f-e25714b53417",
+								"ratings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create new product rating",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"purchaseDate\": \"2021-02-07T09:32:02Z\",\n    \"store\": \"Rewe\",\n    \"stars\": 4.5,\n    \"attachmentUrl\": null\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{apiId}}.execute-api.{{region}}.amazonaws.com/dev/products/21449cea-651f-4918-9a75-a029cb398043/ratings",
+							"protocol": "https",
+							"host": [
+								"{{apiId}}",
+								"execute-api",
+								"{{region}}",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"products",
+								"21449cea-651f-4918-9a75-a029cb398043",
+								"ratings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all ratings",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{apiId}}.execute-api.{{region}}.amazonaws.com/dev/products/ratings",
+							"protocol": "https",
+							"host": [
+								"{{apiId}}",
+								"execute-api",
+								"{{region}}",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"products",
+								"ratings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all user ratings",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{apiId}}.execute-api.{{region}}.amazonaws.com/dev/products/ratings/self",
+							"protocol": "https",
+							"host": [
+								"{{apiId}}",
+								"execute-api",
+								"{{region}}",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"products",
+								"ratings",
+								"self"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Rating",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{apiId}}.execute-api.{{region}}.amazonaws.com/dev/products/3b7ccd9c-957d-4c3d-97b7-08c30be3d89b/ratings",
+							"protocol": "https",
+							"host": [
+								"{{apiId}}",
+								"execute-api",
+								"{{region}}",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"products",
+								"3b7ccd9c-957d-4c3d-97b7-08c30be3d89b",
+								"ratings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Rating",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"purchaseDate\": \"2021-02-08T15:23:15Z\",\n    \"stars\": 4\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{apiId}}.execute-api.{{region}}.amazonaws.com/dev/products/ratings/24c369ae-75f1-4eb0-8f0d-2ee072e7613f",
+							"protocol": "https",
+							"host": [
+								"{{apiId}}",
+								"execute-api",
+								"{{region}}",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"products",
+								"ratings",
+								"24c369ae-75f1-4eb0-8f0d-2ee072e7613f"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "apiId",
+			"value": ""
+		},
+		{
+			"key": "authToken",
+			"value": ""
+		},
+		{
+			"key": "region",
+			"value": ""
+		}
+	]
+}
